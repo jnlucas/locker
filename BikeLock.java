@@ -53,8 +53,7 @@ public class BikeLock {
                 dout.write(comando.getSendOrder(cmd_ReL1));
                 dout.flush();
 
-                dout.write(comando.getSendOrder(cmd_D0));
-                dout.flush();
+                System.out.print("\n enviando S5 ");
 
                 dout.write(comando.getSendOrder(cmd_S5));
                 dout.flush();
@@ -64,7 +63,9 @@ public class BikeLock {
                 
                 int read;
                 int cont = 0;
-	
+
+                System.out.print("\n S5 enviado ");
+
                 while((read = is2.read(buf)) != -1 ) {
                     String output = new String(buf, 0, read);
                     comando.enviarServidorBike(output);
@@ -86,11 +87,44 @@ public class BikeLock {
                     }
                     // cliente.close();
                     // dout.close();
-                    //break; 
+                    break; 
                 
                 }
 
-	            System.out.print("saindo do loop");
+                System.out.print("\n enviando D0 ");
+
+                dout.write(comando.getSendOrder(cmd_D0));
+                dout.flush();
+
+                System.out.print("\n  D0 enviado ");
+
+
+                while((read = is2.read(buf)) != -1 ) {
+                    String output = new String(buf, 0, read);
+                    comando.enviarServidorBike(output);
+                    System.out.print(output);
+                    System.out.flush();
+
+                    if( output.contains("DO")){
+                        dout.write(comando.getSendOrder(cmd_ReD0));
+                        dout.flush();
+                    }
+
+                    if( output.contains("LO")){
+                        dout.write(comando.getSendOrder(cmd_ReL0));
+                        dout.flush();
+                    }
+                    if( output.contains("L1")){
+                        dout.write(comando.getSendOrder(cmd_ReL1));
+                        dout.flush();
+                    }
+                    cliente.close();
+                    dout.close();
+                    break; 
+                }
+
+
+	            System.out.print("\n saindo do loop");
 	            cliente.close();
                 dout.close();
 
