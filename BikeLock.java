@@ -73,15 +73,18 @@ public class BikeLock {
                     System.out.flush();
 
                     if( output.contains("DO")){
+                        System.out.print("\n fechando D0");
                         dout.write(comando.getSendOrder(cmd_ReD0));
                         dout.flush();
                     }
 
                     if( output.contains("LO")){
+                        System.out.print("\n fechando L0");
                         dout.write(comando.getSendOrder(cmd_ReL0));
                         dout.flush();
                     }
                     if( output.contains("L1")){
+                        System.out.print("\n fechando L1");
                         dout.write(comando.getSendOrder(cmd_ReL1));
                         dout.flush();
                     }
@@ -106,15 +109,18 @@ public class BikeLock {
                     System.out.flush();
 
                     if( output.contains("DO")){
+                        System.out.print("\n fechando D0");
                         dout.write(comando.getSendOrder(cmd_ReD0));
                         dout.flush();
                     }
 
                     if( output.contains("LO")){
+                        System.out.print("\n fechando L0");
                         dout.write(comando.getSendOrder(cmd_ReL0));
                         dout.flush();
                     }
                     if( output.contains("L1")){
+                        System.out.print("\n fechando L1");
                         dout.write(comando.getSendOrder(cmd_ReL1));
                         dout.flush();
                     }
