@@ -1,12 +1,20 @@
 import java.net.*;
 import java.io.*;
 
-public class BikeLock {
+public class BikeLock implements Runnable{
   
     StringBuilder responseString = new StringBuilder();
 
     PrintWriter writer = null;
     BufferedReader bufferedReader = null;	
+
+    public Socket cliente;
+
+    public BikeLock(Socket cliente){
+        this.cliente = cliente;
+    }
+
+
 	
     public static void main(String[] args) {
  
@@ -32,8 +40,30 @@ public class BikeLock {
             while(true) {
         
                 Socket cliente = servidor.accept();
-                    
-                emei = comando.getEmei(cliente);
+
+
+                BikeLock tratamento = new BikeLock(cliente);
+                Thread t = new Thread(tratamento);
+                // Inicia a thread para o cliente conectado
+                t.start();
+            }
+
+        }
+        catch(Exception e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
+
+
+    public void run(){
+
+            Comando comando = new Comando();
+      
+            String emei = "";
+
+        try{
+
+            emei = comando.getEmei(this.cliente);
 
                 String cmd_ReL1  = "*CMDS,OM,"+emei+",20212411012200,Re,L1#\n";
 
@@ -47,7 +77,7 @@ public class BikeLock {
 
 	            
 
-       	        DataOutputStream  dout = new DataOutputStream(cliente.getOutputStream());
+       	        DataOutputStream  dout = new DataOutputStream(this.cliente.getOutputStream());
 
                 
                 dout.write(comando.getSendOrder(cmd_ReL1));
@@ -58,7 +88,7 @@ public class BikeLock {
                 dout.write(comando.getSendOrder(cmd_S5));
                 dout.flush();
 
-                InputStream is2 = cliente.getInputStream();
+                InputStream is2 = this.cliente.getInputStream();
                 byte[] buf = new byte[1024];
                 
                 int read;
@@ -124,22 +154,23 @@ public class BikeLock {
                         dout.write(comando.getSendOrder(cmd_ReL1));
                         dout.flush();
                     }
-                    cliente.close();
+                    this.cliente.close();
                     dout.close();
                     break; 
                 }
 
 
 	            System.out.print("\n saindo do loop");
-	            cliente.close();
+	            this.cliente.close();
                 dout.close();
 
-            }
+
+        }catch(Exception e){
 
         }
-        catch(Exception e) {
-            System.out.println("Erro: " + e.getMessage());
-        }
+
+
+
     }
 }
 
