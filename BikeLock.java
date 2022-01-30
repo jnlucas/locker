@@ -65,15 +65,15 @@ public class BikeLock implements Runnable{
 
             emei = comando.getEmei(this.cliente);
 
-                String cmd_ReL1  = "*CMDS,OM,"+emei+",20212411012200,Re,L1#\n";
+                String cmd_ReL1  = "*CMDS,AL,"+emei+",20212411012200,Re,L1#\n";
 
-                String cmd_S5 ="*CMDS,OM,"+emei+",20212411012200,S5#\n";
+                String cmd_S5 ="*CMDS,AL,"+emei+",20212411012200,S5#\n";
 
-                String cmd_D0 = "*CMDS,OM,"+emei+",20212411012200,D0#\n";
+                String cmd_D0 = "*CMDS,AL,"+emei+",20212411012200,D0#\n";
 	
-	            String cmd_ReL0 ="*CMDS,OM,"+emei+",20212411012200,Re,L0#\n";
+	            String cmd_ReL0 ="*CMDS,AL,"+emei+",20212411012200,Re,L0#\n";
                 
-                String cmd_ReD0 ="*CMDS,OM,"+emei+",20212411012200,Re,D0#\n";
+                String cmd_ReD0 ="*CMDS,AL,"+emei+",20212411012200,Re,D0#\n";
 
 	            
 
@@ -102,13 +102,13 @@ public class BikeLock implements Runnable{
                     System.out.print(output);
                     System.out.flush();
 
-                    if( output.contains("DO")){
+                    if( output.contains("D0")){
                         System.out.print("\n fechando D0");
                         dout.write(comando.getSendOrder(cmd_ReD0));
                         dout.flush();
                     }
 
-                    if( output.contains("LO")){
+                    if( output.contains("L0")){
                         System.out.print("\n fechando L0");
                         dout.write(comando.getSendOrder(cmd_ReL0));
                         dout.flush();
@@ -138,13 +138,13 @@ public class BikeLock implements Runnable{
                     System.out.print(output);
                     System.out.flush();
 
-                    if( output.contains("DO")){
+                    if( output.contains("D0")){
                         System.out.print("\n fechando D0");
                         dout.write(comando.getSendOrder(cmd_ReD0));
                         dout.flush();
                     }
 
-                    if( output.contains("LO")){
+                    if( output.contains("L0")){
                         System.out.print("\n fechando L0");
                         dout.write(comando.getSendOrder(cmd_ReL0));
                         dout.flush();
