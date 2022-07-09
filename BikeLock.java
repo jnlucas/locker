@@ -86,9 +86,9 @@ public class BikeLock implements Runnable{
                 String cmd_ReD0 ="*CMDS,AL,"+emei+",20212411012200,Re,D0#\n";
                 
                 
-                String cmd_travar ="*CMDS,OM,"+emei+",20212411012200,L0,0,1,1621906458#\n";
+                String cmd_travar ="*CMDS,AL,"+emei+",20212411012200,L0,0,1,1621906458#\n";
 
-                String cmd_travar_re ="*CMDS,OM,"+emei+",20212411012200,Re,L0#\n";
+                String cmd_travar_re ="*CMDS,AL,"+emei+",20212411012200,Re,L0#\n";
                 
 	            
        	        DataOutputStream  dout = new DataOutputStream(this.cliente.getOutputStream());
@@ -97,11 +97,18 @@ public class BikeLock implements Runnable{
                 dout.write(comando.getSendOrder(cmd_ReL1));
                 dout.flush();
 
-                System.out.print("\n enviando S5 ");
+                if(trava != ""){
+                    System.out.print("\n enviando destravamento  ");
+                    dout.write(comando.getSendOrder(cmd_travar));
+                    dout.flush();
 
-                dout.write(comando.getSendOrder(cmd_S5));
-                dout.flush();
+                }else{
+                    System.out.print("\n enviando S5 ");
+                    dout.write(comando.getSendOrder(cmd_S5));
+                    dout.flush();
 
+                }
+                
                 InputStream is2 = this.cliente.getInputStream();
                 byte[] buf = new byte[1024];
                 
@@ -141,44 +148,44 @@ public class BikeLock implements Runnable{
 
                 // enviando comando de trava
 
-                if(trava != ""){
+                // if(trava != ""){
 
-                    System.out.print("\n enviando L0 para travar ");
+                //     System.out.print("\n enviando L0 para travar ");
 
-                    dout.write(comando.getSendOrder(cmd_travar));
-                    dout.flush();
+                //     dout.write(comando.getSendOrder(cmd_travar));
+                //     dout.flush();
 
-                    System.out.print("\n  L0 enviado para travar");
+                //     System.out.print("\n  L0 enviado para travar");
 
 
-                    while((read = is2.read(buf)) != -1 ) {
-                        String output = new String(buf, 0, read);
-                        //comando.enviarServidorBike(output);
-                        System.out.print(output);
-                        System.out.flush();
+                //     while((read = is2.read(buf)) != -1 ) {
+                //         String output = new String(buf, 0, read);
+                //         //comando.enviarServidorBike(output);
+                //         System.out.print(output);
+                //         System.out.flush();
 
-                        if( output.contains("D0")){
-                            System.out.print("\n fechando D0");
-                            dout.write(comando.getSendOrder(cmd_ReD0));
-                            dout.flush();
-                        }
+                //         if( output.contains("D0")){
+                //             System.out.print("\n fechando D0");
+                //             dout.write(comando.getSendOrder(cmd_ReD0));
+                //             dout.flush();
+                //         }
 
-                        if( output.contains("L0")){
-                            System.out.print("\n fechando L0");
-                            dout.write(comando.getSendOrder(cmd_travar_re));
-                            dout.flush();
-                        }
-                        if( output.contains("L1")){
-                            System.out.print("\n fechando L1");
-                            dout.write(comando.getSendOrder(cmd_ReL1));
-                            dout.flush();
-                        }
-                        this.cliente.close();
-                        dout.close();
-                        break; 
-                    }
+                //         if( output.contains("L0")){
+                //             System.out.print("\n fechando L0");
+                //             dout.write(comando.getSendOrder(cmd_travar_re));
+                //             dout.flush();
+                //         }
+                //         if( output.contains("L1")){
+                //             System.out.print("\n fechando L1");
+                //             dout.write(comando.getSendOrder(cmd_ReL1));
+                //             dout.flush();
+                //         }
+                //         this.cliente.close();
+                //         dout.close();
+                //         break; 
+                //     }
 
-                }
+                // }
 
                 // fim comando de trava
 
