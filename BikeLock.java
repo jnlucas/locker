@@ -314,7 +314,7 @@ class Comando {
 
         try (Connection conn = DriverManager.getConnection(connectionUrl);) {
            System.out.println("conectado no banco de dados");
-           String sql = "UPDATE USER_BIKE_TRAVA SET is_destravado = 1, dt_destravado = getdate() FROM USER_BIKE_TRAVA UBT INNER JOIN BIKE B ON UBT.bike_id = B.id WHERE UBT.is_destravado IS NULL OR UBT.is_destravado  = 0 and B.imei = '"+emei+"'";
+           String sql = "UPDATE USER_BIKE_TRAVA SET is_destravado = 1, dt_destrava = getdate() FROM USER_BIKE_TRAVA UBT INNER JOIN BIKE B ON UBT.bike_id = B.id WHERE UBT.is_destravado IS NULL OR UBT.is_destravado  = 0 and B.imei = '"+emei+"'";
            Statement stmt = conn.createStatement();
            stmt.executeQuery(sql);
            conn.close();
