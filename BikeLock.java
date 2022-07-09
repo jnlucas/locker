@@ -86,9 +86,9 @@ public class BikeLock implements Runnable{
                 String cmd_ReD0 ="*CMDS,AL,"+emei+",20212411012200,Re,D0#\n";
                 
                 
-                String cmd_travar ="*CMDS,AL,"+emei+",20212411012200,L0,0,1,1621906458#\n";
+                String cmd_travar ="*CMDS,OM,"+emei+",20212411012200,L0,0,1,1621906458#\n";
 
-                String cmd_travar_re ="*CMDS,AL,"+emei+",20212411012200,Re,L0#\n";
+                String cmd_travar_re ="*CMDS,OM,"+emei+",20212411012200,Re,L0#\n";
                 
 	            
        	        DataOutputStream  dout = new DataOutputStream(this.cliente.getOutputStream());
@@ -165,7 +165,7 @@ public class BikeLock implements Runnable{
 
                         if( output.contains("L0")){
                             System.out.print("\n fechando L0");
-                            dout.write(comando.getSendOrder(cmd_ReL0));
+                            dout.write(comando.getSendOrder(cmd_travar_re));
                             dout.flush();
                         }
                         if( output.contains("L1")){
