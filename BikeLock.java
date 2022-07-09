@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList; 
+import java.util.Date;
 
 
 public class BikeLock implements Runnable{
@@ -69,6 +70,11 @@ public class BikeLock implements Runnable{
             String emei = "";
 
         try{
+                 Date date = new Date();
+
+                Long tempo = date.getTime();
+
+                tempo.toString();
 
                 emei = comando.getEmei(this.cliente);
 
@@ -86,7 +92,7 @@ public class BikeLock implements Runnable{
                 String cmd_ReD0 ="*CMDS,AL,"+emei+",20212411012200,Re,D0#\n";
                 
                 
-                String cmd_travar ="*CMDS,AL,"+emei+",20212411012200,L0,0,1,1621906458#\n";
+                String cmd_travar ="*CMDS,AL,"+emei+",20212411012200,L0,0,1,"+tempo+"#\n";
 
                 String cmd_travar_re ="*CMDS,AL,"+emei+",20212411012200,Re,L0#\n";
                 
