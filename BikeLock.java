@@ -1,5 +1,12 @@
 import java.net.*;
 import java.io.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList; 
+
 
 public class BikeLock implements Runnable{
   
@@ -23,7 +30,7 @@ public class BikeLock implements Runnable{
         PrintWriter writer = null;
         BufferedReader bufferedReader = null;
 
-
+        
 	    try {
 
             ServerSocket servidor = new ServerSocket(2222,50,InetAddress.getByName("10.0.0.4"));
@@ -63,7 +70,10 @@ public class BikeLock implements Runnable{
 
         try{
 
-            emei = comando.getEmei(this.cliente);
+                emei = comando.getEmei(this.cliente);
+
+                String trava = comando.verificaTrava(emei);
+
 
                 String cmd_ReL1  = "*CMDS,AL,"+emei+",20212411012200,Re,L1#\n";
 
@@ -74,9 +84,13 @@ public class BikeLock implements Runnable{
 	            String cmd_ReL0 ="*CMDS,AL,"+emei+",20212411012200,Re,L0#\n";
                 
                 String cmd_ReD0 ="*CMDS,AL,"+emei+",20212411012200,Re,D0#\n";
+                
+                
+                String cmd_travar ="*CMDS,AL,"+emei+",20212411012200,L0,0,1,1621906458#\n";
 
+                String cmd_travar_re ="*CMDS,AL,"+emei+",20212411012200,Re,L0#\n";
+                
 	            
-
        	        DataOutputStream  dout = new DataOutputStream(this.cliente.getOutputStream());
 
                 
@@ -123,6 +137,54 @@ public class BikeLock implements Runnable{
                     break; 
                 
                 }
+                
+
+                // enviando comando de trava
+
+                if(trava != ""){
+
+                    System.out.print("\n enviando L0 para travar ");
+
+                    dout.write(comando.getSendOrder(cmd_travar));
+                    dout.flush();
+
+                    System.out.print("\n  L0 enviado para travar");
+
+
+                    while((read = is2.read(buf)) != -1 ) {
+                        String output = new String(buf, 0, read);
+                        //comando.enviarServidorBike(output);
+                        System.out.print(output);
+                        System.out.flush();
+
+                        if( output.contains("D0")){
+                            System.out.print("\n fechando D0");
+                            dout.write(comando.getSendOrder(cmd_ReD0));
+                            dout.flush();
+                        }
+
+                        if( output.contains("L0")){
+                            System.out.print("\n fechando L0");
+                            dout.write(comando.getSendOrder(cmd_ReL0));
+                            dout.flush();
+                        }
+                        if( output.contains("L1")){
+                            System.out.print("\n fechando L1");
+                            dout.write(comando.getSendOrder(cmd_ReL1));
+                            dout.flush();
+                        }
+                        this.cliente.close();
+                        dout.close();
+                        break; 
+                    }
+
+                }
+
+                // fim comando de trava
+
+
+
+
 
                 System.out.print("\n enviando D0 ");
 
@@ -184,6 +246,43 @@ class Comando {
 	    return addByte(new byte[]{(byte) 0xFF,(byte) 0xFF},order);
     }
 
+    public String verificaTrava(String emei){
+        
+        String destravar = "";
+        String connectionUrl =
+                "jdbc:sqlserver://bikego_prd.sqlserver.dbaas.com.br:1433;"
+                        + "database=bikego_prd;"
+                        + "user=bikego_prd;"
+                        + "password=bikegoprd;"
+                        + "encrypt=true;"
+                        + "trustServerCertificate=true;"
+                        + "loginTimeout=30;";
+
+        try (Connection conn = DriverManager.getConnection(connectionUrl);) {
+           System.out.println("conectado no banco de dados");
+
+           String sql = "SELECT * FROM USER_BIKE_TRAVA UBT INNER JOIN BIKE B ON UBT.bike_id = B.id WHERE UBT.is_destravado IS NULL OR UBT.is_destravado  = 0 and B.imei = '"+emei+"'";
+
+           Statement stmt = conn.createStatement();
+           ResultSet rs;
+ 
+            rs = stmt.executeQuery(sql);
+            while ( rs.next() ) {
+
+                String teste = rs.getString("imei");
+                destravar = teste;
+                System.out.println(teste);
+            }
+            conn.close();
+
+            return destravar;
+        }
+        // Handle any errors that may have occurred.
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return destravar;
+    }
 
     public String getEmei(Socket cli){
 	
