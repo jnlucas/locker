@@ -108,6 +108,9 @@ public class BikeLock implements Runnable{
                     dout.write(comando.getSendOrder(cmd_travar));
                     dout.flush();
 
+                    comando.atualizarTrava(emei);
+
+
                 }else{
                     System.out.print("\n enviando S5 ");
                     dout.write(comando.getSendOrder(cmd_S5));
@@ -295,6 +298,31 @@ class Comando {
             e.printStackTrace();
         }
         return destravar;
+    }
+
+    public void atualizarTrava(String emei){
+        
+        String destravar = "";
+        String connectionUrl =
+                "jdbc:sqlserver://bikego_prd.sqlserver.dbaas.com.br:1433;"
+                        + "database=bikego_prd;"
+                        + "user=bikego_prd;"
+                        + "password=bikegoprd;"
+                        + "encrypt=true;"
+                        + "trustServerCertificate=true;"
+                        + "loginTimeout=30;";
+
+        try (Connection conn = DriverManager.getConnection(connectionUrl);) {
+           System.out.println("conectado no banco de dados");
+           String sql = "UPDATE USER_BIKE_TRAVA SET is_destravado = 1, dt_destravado = getdate() FROM USER_BIKE_TRAVA UBT INNER JOIN BIKE B ON UBT.bike_id = B.id WHERE UBT.is_destravado IS NULL OR UBT.is_destravado  = 0 and B.imei = '"+emei+"'";
+           Statement stmt = conn.createStatement();
+           stmt.executeQuery(sql);
+           conn.close();
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        
     }
 
     public String getEmei(Socket cli){
