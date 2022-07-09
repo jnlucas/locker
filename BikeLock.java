@@ -277,7 +277,7 @@ class Comando {
         try (Connection conn = DriverManager.getConnection(connectionUrl);) {
            System.out.println("conectado no banco de dados");
 
-           String sql = "SELECT * FROM USER_BIKE_TRAVA UBT INNER JOIN BIKE B ON UBT.bike_id = B.id WHERE UBT.is_destravado IS NULL OR UBT.is_destravado  = 0 and B.imei = '"+emei+"'";
+           String sql = "SELECT * FROM USER_BIKE_TRAVA UBT INNER JOIN BIKE B ON UBT.bike_id = B.id WHERE UBT.is_destravado IS NULL OR UBT.is_destravado  = 0 and B.imei_lock = '"+emei+"'";
 
            Statement stmt = conn.createStatement();
            ResultSet rs;
@@ -285,7 +285,7 @@ class Comando {
             rs = stmt.executeQuery(sql);
             while ( rs.next() ) {
 
-                String teste = rs.getString("imei");
+                String teste = rs.getString("imei_lock");
                 destravar = teste;
                 System.out.println(teste);
             }
@@ -314,7 +314,7 @@ class Comando {
 
         try (Connection conn = DriverManager.getConnection(connectionUrl);) {
            System.out.println("conectado no banco de dados");
-           String sql = "UPDATE USER_BIKE_TRAVA SET is_destravado = 1, dt_destrava = getdate() FROM USER_BIKE_TRAVA UBT INNER JOIN BIKE B ON UBT.bike_id = B.id WHERE UBT.is_destravado IS NULL OR UBT.is_destravado  = 0 and B.imei = '"+emei+"'";
+           String sql = "UPDATE USER_BIKE_TRAVA SET is_destravado = 1, dt_destrava = getdate() FROM USER_BIKE_TRAVA UBT INNER JOIN BIKE B ON UBT.bike_id = B.id WHERE UBT.is_destravado IS NULL OR UBT.is_destravado  = 0 and B.imei_lock = '"+emei+"'";
            Statement stmt = conn.createStatement();
            stmt.executeQuery(sql);
            conn.close();
