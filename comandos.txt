@@ -1,0 +1,2 @@
+javac -cp "mssql-jdbc-10.2.1.jre11.jar"  BikeLock.java
+java -cp .:mssql-jdbc-10.2.1.jre11.jar BikeLock 
