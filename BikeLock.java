@@ -202,40 +202,40 @@ public class BikeLock implements Runnable{
                 //comentando comandos adicionais
 
 
-                // System.out.print("\n enviando D0 ");
+                System.out.print("\n enviando D0 ");
 
-                // dout.write(comando.getSendOrder(cmd_D0));
-                // dout.flush();
+                dout.write(comando.getSendOrder(cmd_D0));
+                dout.flush();
 
-                // System.out.print("\n  D0 enviado ");
+                System.out.print("\n  D0 enviado ");
 
 
-                // while((read = is2.read(buf)) != -1 ) {
-                //     String output = new String(buf, 0, read);
-                //     comando.enviarServidorBike(output);
-                //     System.out.print(output);
-                //     System.out.flush();
+                while((read = is2.read(buf)) != -1 ) {
+                    String output = new String(buf, 0, read);
+                    comando.enviarServidorBike(output);
+                    System.out.print(output);
+                    System.out.flush();
 
-                //     if( output.contains("D0")){
-                //         System.out.print("\n fechando D0");
-                //         dout.write(comando.getSendOrder(cmd_ReD0));
-                //         dout.flush();
-                //     }
+                    if( output.contains("D0")){
+                        System.out.print("\n fechando D0");
+                        dout.write(comando.getSendOrder(cmd_ReD0));
+                        dout.flush();
+                    }
 
-                //     if( output.contains("L0")){
-                //         System.out.print("\n fechando L0");
-                //         dout.write(comando.getSendOrder(cmd_ReL0));
-                //         dout.flush();
-                //     }
-                //     if( output.contains("L1")){
-                //         System.out.print("\n fechando L1");
-                //         dout.write(comando.getSendOrder(cmd_ReL1));
-                //         dout.flush();
-                //     }
-                //     this.cliente.close();
-                //     dout.close();
-                //     break; 
-                // }
+                    if( output.contains("L0")){
+                        System.out.print("\n fechando L0");
+                        dout.write(comando.getSendOrder(cmd_ReL0));
+                        dout.flush();
+                    }
+                    if( output.contains("L1")){
+                        System.out.print("\n fechando L1");
+                        dout.write(comando.getSendOrder(cmd_ReL1));
+                        dout.flush();
+                    }
+                    this.cliente.close();
+                    dout.close();
+                    break; 
+                }
 
 
 	            System.out.print("\n saindo do loop");
